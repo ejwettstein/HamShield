@@ -20,6 +20,8 @@
 #define RESET_PIN A3
 #define SWITCH_PIN 2
 
+//#define DDS_DEBUG_SERIAL
+
 HamShield radio;
 DDS dds;
 AFSK afsk;
@@ -66,6 +68,9 @@ void setup() {
 }
 
 uint32_t last = 0;
+int8_t agc_adjust = 1;
+bool btn_down = false;
+
 void loop() {
    if(afsk.decoder.read() || afsk.rxPacketCount()) {
       // A true return means something was put onto the packet FIFO
@@ -79,6 +84,26 @@ void loop() {
         }
       }
     }
+	if (digitalRead(SWITCH_PIN) == LOW) {
+		btn_down = true;
+	}
+	if (digitalRead(SWITCH_PIN) == HIGH && btn_down == true) {
+		btn_down = false;
+		int8_t agc_hi = 20;
+		int8_t agc_lo = 0;
+		int8_t agc = radio.getAGC();
+		
+		if (agc_adjust == 1 && agc >= agc_hi)
+		{
+			agc_adjust = -1;
+		}
+		if (agc_adjust == -1 && agc <= 0) {
+			agc_adjust = 1;
+		}
+		radio.setAGC(agc + agc_adjust);
+		Serial.print(F("AGC: "));
+		Serial.println(radio.getAGC());
+	}
 }
 
 //TODO: d2 is the switch input, so remove this
