@@ -36,6 +36,7 @@
 //#define A1846S_XTAL_FREQ_REG        0x2B    // xtal_freq<15:0>
 //#define A1846S_ADCLK_FREQ_REG       0x2C    // adclk_freq<15:0>
 #define A1846S_INT_MODE_REG         0x2D    // interrupt enables
+#define A1846S_AGC_REG				0x32	// automatic gain control level
 #define A1846S_TX_VOICE_REG         0x3A    // tx voice control reg
 #define A1846S_TH_H_VOX_REG         0x41    // register holds vox high (open) threshold bits
 #define A1846S_TH_L_VOX_REG         0x42    // register holds vox low (shut) threshold bits
@@ -88,6 +89,10 @@
 // Bitfields for A1846S_BAND_SEL_REG
 //#define A1846S_BAND_SEL_BIT        7  // band_sel<1:0>
 //#define A1846S_BAND_SEL_LENGTH     2
+
+// Bitfields for  A1846S_AGC_REG
+#define A1846S_AGC_BIT          11  // AGC <11:6>
+#define A1846S_AGC_LENGTH       5
 
 // Bitfields for RDA1864_GPIO_MODE_REG
 #define RDA1864_GPIO7_MODE_BIT     15  // <1:0> 00=hi-z,01=vox,10=low,11=hi
@@ -410,6 +415,10 @@ class HamShield {
 		void enableInterrupt(uint16_t interrupt);
 		void disableInterrupt(uint16_t interrupt);
 		bool getInterruptEnabled(uint16_t interrupt);
+
+		// AGC
+		void setAGC(uint8_t value);
+		uint8_t getAGC();
 		
 		// ST mode
 		void setStMode(uint16_t mode);

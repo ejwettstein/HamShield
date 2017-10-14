@@ -1081,7 +1081,14 @@ bool HamShield::getInterruptEnabled(uint16_t interrupt){
     HSreadBitW(devAddr, A1846S_INT_MODE_REG, interrupt, radio_i2c_buf);
     return (radio_i2c_buf[0] != 0);
 }
-
+// AGC
+void HamShield::setAGC(uint8_t value) {
+	HSwriteBitsW(devAddr, A1846S_AGC_REG, A1846S_AGC_BIT, A1846S_AGC_LENGTH, value);
+}
+uint8_t HamShield::getAGC() {
+	HSreadBitsW(devAddr, A1846S_AGC_REG, A1846S_AGC_BIT, A1846S_AGC_LENGTH, radio_i2c_buf);
+	return radio_i2c_buf[0];
+}
 // ST mode
 void HamShield::setStMode(uint16_t mode){
     HSwriteBitsW(devAddr, A1846S_CTL_REG, A1846S_ST_MODE_BIT, A1846S_ST_MODE_LENGTH, mode);
